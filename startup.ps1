@@ -48,7 +48,7 @@ try {
         if ((Get-Location).Path -match $githubproject) { cd.. }
         Write-Output "Path is $((Get-Location).Path)"
 
-        $PUSH = $true
+        $PUSH = $false
 
         if ((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject) {
             Write-Output "Git clone already done, checking for updates"
