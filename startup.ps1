@@ -36,6 +36,7 @@ try {
     # UPDATING
     if ($githubdata) {
         if (Get-Item Env:DEMO -ErrorAction SilentlyContinue) { $demo = $true } else { $demo = $false }
+        if (Get-Item Env:PUSH -ErrorAction SilentlyContinue) { $push = $true } else { $push = $false }
         $githubuser = $githubdata.GITHUB_USER
         $githubtoken = $githubdata.GITHUB_TOKEN
         $githuburl = $githubdata.GITHUB_REPO
@@ -47,8 +48,6 @@ try {
         if ((Get-Location).Path -match 'container') { cd.. }
         if ((Get-Location).Path -match $githubproject) { cd.. }
         Write-Output "Path is $((Get-Location).Path)"
-
-        $PUSH = $false
 
         if ((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject) {
             Write-Output "Git clone already done, checking for updates"
