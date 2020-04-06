@@ -37,9 +37,25 @@ try {
         $githubuser = $githubdata.GITHUB_USER
         $githubtoken = $githubdata.GITHUB_TOKEN
         $githuburl = $githubdata.GITHUB_REPO
-        if((Get-Location).Path -contains 'container'){ cd.. }
+        $githubproject = $githubdata.GITHUB_PROJ
+        
+        # Return to Home folder
+        if((Get-Location).Path -match 'container'){ cd.. }
+        if((Get-Location).Path -match $githubproject){ cd.. }
         Write-Output "Path is $((Get-Location).Path)"
-        git clone "https://$($githubuser):$($githubtoken)@$($githuburl)"
+
+        if((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject){
+            Write-Output "Git clone already done"
+            cd $githubproject
+            git pull "https://$($githubuser):$($githubtoken)@$($githuburl)$($githubproject).git"
+        } else {                    
+            Write-Output "Git clone for the first time..."
+            New-Item -Name $githubproject -ItemType 'directory'
+            cd $githubproject
+            git init
+            git pull "https://$($githubuser):$($githubtoken)@$($githuburl)$($githubproject).git"
+        }
+
 
     } else { Write-Error "Github data not loaded!"; throw }
 }
