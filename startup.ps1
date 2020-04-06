@@ -1,6 +1,6 @@
 while ($null -ne 1) {
     $PSVersionTable.PSVersion
-    ping mssql
-    test-netconnection mssql 1433
+    test-connection -ping mssql
+    test-connection mssql -tcpport 1433
     Start-Sleep -s 5
 }
