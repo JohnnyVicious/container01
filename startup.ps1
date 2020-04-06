@@ -45,6 +45,8 @@ try {
 }
 catch {
     $seconds = Get-Random -Minimum 60 -Maximum 300
+    $Error
+    $Error.Clear()
     Write-Output "Something went wrong, waiting $seconds before restarting..."
     Start-Sleep -Seconds $seconds
     Exit
