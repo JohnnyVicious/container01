@@ -33,11 +33,14 @@ try {
     }
     else { Write-Error "PS module SqlServer is not installed!"; throw }
 
+    # UPDATING
     if($githubdata){
         $githubuser = $githubdata.GITHUB_USER
         $githubtoken = $githubdata.GITHUB_TOKEN
         $githuburl = $githubdata.GITHUB_REPO
         $githubproject = $githubdata.GITHUB_PROJ
+        $githubrepo = "https://$($githubuser):$($githubtoken)@$($githuburl)$($githubproject).git"
+        "https://$($githubuser):$($githubtoken)@$($githuburl)$($githubproject).git"
         
         # Return to Home folder
         if((Get-Location).Path -match 'container'){ cd.. }
@@ -47,16 +50,24 @@ try {
         if((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject){
             Write-Output "Git clone already done"
             cd $githubproject
-            git pull "https://$($githubuser):$($githubtoken)@$($githuburl)$($githubproject).git"
+            git pull $githubrepo
+
         } else {                    
             Write-Output "Git clone for the first time..."
-            New-Item -Name $githubproject -ItemType 'directory'
-            cd $githubproject
-            git init
-            git pull "https://$($githubuser):$($githubtoken)@$($githuburl)$($githubproject).git"
+            git clone $githubrepo
+            git config --global user.email "you@example.com"
+            git config --global user.name "Your Name"
         }
 
-
+        if (Get-Item Env:DEMO -ErrorAction SilentlyContinue) {
+            # If DEMO env exists, dev branch will be merged
+            Write-Output "DEMO varibale set, merging dev branch"
+            if((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject){ cd $githubproject }
+            git fetch $githubrepo dev
+            git merge origin/dev
+            git commit
+        }
+        
     } else { Write-Error "Github data not loaded!"; throw }
 }
 catch {
