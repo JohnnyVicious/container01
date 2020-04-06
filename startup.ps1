@@ -97,7 +97,8 @@ try {
 
     # Launch MAIN program
     Write-Output "Launch MAIN program in $((Get-Location).Path)"
-    pwsh "$((Get-Location).Path)/main.ps1"
+    Get-ChildItem -File
+    pwsh main.ps1
 }
 catch {
     $seconds = Get-Random -Minimum 60 -Maximum 300
