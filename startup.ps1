@@ -4,7 +4,7 @@ try {
     }
     else { Write-Output "PowerShell version $($PSVersionTable.PSVersion) detected." }
 
-    if ($null -eq (Get-InstalledModule sqlserver)) {
+    if ($null -eq (Get-InstalledModule sqlserver -ErrorAction SilentlyContinue)) {
         Write-Output "Installing PS module SqlServer"
         Install-Module -Name SqlServer -Scope CurrentUser -Force    
         Import-Module SqlServer
