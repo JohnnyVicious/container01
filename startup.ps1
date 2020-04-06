@@ -20,12 +20,12 @@ try {
     if ((get-installedmodule sqlserver).Version) {
         if ($mssql = Get-Item Env:MSSQL -ErrorAction SilentlyContinue) {
             $mssql = $mssql.Value
-            $sqlport = 1433
-            if (test-connection $mssql -tcpport 1433 -ErrorAction SilentlyContinue) {
+            $mssqlport = (Get-Item Env:MSSQL -ErrorAction SilentlyContinue).Value
+            if (test-connection $mssql -tcpport $mssqlport -ErrorAction SilentlyContinue) {
                 Write-Output "Connected to MSSQL, getting Github data..."
                 Invoke-SqlCmd 
             }
-            else { Write-Error "Unable to connect to $MSSQL on TCP $sqlport!"; throw }
+            else { Write-Error "Unable to connect to $mssql on TCP $mssqlport!"; throw }
         }
         else { Write-Error "MSSQL server not set as environment variable!"; throw }
     } else { Write-Error "PS module SqlServer is not installed!"; throw }
