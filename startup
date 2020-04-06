@@ -3,9 +3,10 @@ cd /home
 echo "Cloning..."
 git clone https://github.com/JohnnyVicious/container01.git
 
-echo "Starting PS"
+echo "Startup script"
 cd container01
 pwsh startup.ps1
+echo "Running Main"
 cd ..
 cd TradeBot
 pwsh main.ps1
