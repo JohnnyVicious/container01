@@ -20,7 +20,7 @@ try {
     if ((get-installedmodule sqlserver).Version) {
         if ($mssql = Get-Item Env:MSSQL -ErrorAction SilentlyContinue) {
             $mssql = $mssql.Value
-            $mssqlport = (Get-Item Env:MSSQL -ErrorAction SilentlyContinue).Value
+            $mssqlport = (Get-Item Env:MSSQLPORT -ErrorAction SilentlyContinue).Value
             if (test-connection $mssql -tcpport $mssqlport -ErrorAction SilentlyContinue) {
                 Write-Output "Connected to MSSQL, getting Github data..."
                 Invoke-SqlCmd 
