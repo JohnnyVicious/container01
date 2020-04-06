@@ -9,4 +9,6 @@ WORKDIR /home/
 COPY startup /home/
 RUN chmod +x startup
 
+ENV MSSQL=mssql
+
 CMD [ "sh", "-c", "sh startup" ]
