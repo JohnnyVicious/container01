@@ -37,8 +37,10 @@ try {
         $githubuser = $githubdata.GITHUB_USER
         $githubtoken = $githubdata.GITHUB_TOKEN
         $githuburl = $githubdata.GITHUB_REPO
-        $githubdata
-        Get-Location
+        $githubuser
+        $githubtoken
+        $githuburl
+        Write-Output "Path is $((Get-Location).Path)"
     } else { Write-Error "Github data not loaded!"; throw }
 }
 catch {
