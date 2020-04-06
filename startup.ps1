@@ -34,7 +34,8 @@ try {
     else { Write-Error "PS module SqlServer is not installed!"; throw }
 
     # UPDATING
-    if($githubdata){
+    if ($githubdata) {
+        if (Get-Item Env:DEMO -ErrorAction SilentlyContinue) { $demo = $true } else { $demo = $false }
         $githubuser = $githubdata.GITHUB_USER
         $githubtoken = $githubdata.GITHUB_TOKEN
         $githuburl = $githubdata.GITHUB_REPO
@@ -43,32 +44,55 @@ try {
         "https://$($githubuser):$($githubtoken)@$($githuburl)$($githubproject).git"
         
         # Return to Home folder
-        if((Get-Location).Path -match 'container'){ cd.. }
-        if((Get-Location).Path -match $githubproject){ cd.. }
+        if ((Get-Location).Path -match 'container') { cd.. }
+        if ((Get-Location).Path -match $githubproject) { cd.. }
         Write-Output "Path is $((Get-Location).Path)"
 
-        if((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject){
-            Write-Output "Git clone already done"
-            cd $githubproject
-            git pull $githubrepo
+        $PUSH = $true
 
-        } else {                    
+        if ((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject) {
+            Write-Output "Git clone already done, checking for updates"
+            cd $githubproject      
+
+            if ($PUSH) {                                  
+                # If pushing from local source is enabled
+                if ($demo) {
+                    # dev branch
+                    Write-Output "(Running on DEV branch)"
+                    git checkout dev  
+                    #git fetch $githubrepo dev     
+                }
+                else {
+                    # master branch
+                    git checkout master        
+                    #git fetch $githubrepo master
+                }
+
+                Write-Output "Performing GIT PUSH..."
+                git add .
+                git commit -m "$(Get-Date -Format "yyyyMMdd HH:mm")"
+                git push $githubrepo
+            } else {
+                if ($demo) { 
+                    git checkout dev
+                    git pull $githubrepo dev
+                } else {
+                    git checkout master
+                    git pull $githubrepo master
+                }                
+            }
+        }
+        else {                    
             Write-Output "Git clone for the first time..."
             git clone $githubrepo
+            cd $githubproject
             git config --global user.email "you@example.com"
-            git config --global user.name "Your Name"
-        }
-
-        if (Get-Item Env:DEMO -ErrorAction SilentlyContinue) {
-            # If DEMO env exists, dev branch will be merged
-            Write-Output "DEMO varibale set, merging dev branch"
-            if((Get-Location | Get-ChildItem -Directory).Name -contains $githubproject){ cd $githubproject }
-            git fetch $githubrepo dev
-            git merge origin/dev
-            git commit
+            git config --global user.name "PowerShell Script"            
+            if ($demo) { git checkout dev }
         }
         
-    } else { Write-Error "Github data not loaded!"; throw }
+    }
+    else { Write-Error "Github data not loaded!"; throw }
 }
 catch {
     $seconds = Get-Random -Minimum 60 -Maximum 300
