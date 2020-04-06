@@ -10,5 +10,6 @@ COPY startup /home/
 RUN chmod +x startup
 
 ENV MSSQL=mssql
+ENV MSSQLPORT=1433
 
 CMD [ "sh", "-c", "sh startup" ]
