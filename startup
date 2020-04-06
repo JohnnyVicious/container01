@@ -1,13 +1,8 @@
-echo "Resolving folder..."
 cd /home
-ls -l
 
 echo "Cloning..."
 git clone https://github.com/JohnnyVicious/container01.git
 
-echo "Resolving folder..."
-ls -l
-
 echo "Starting PS"
-cd /container01
+cd container01
 pwsh startup.ps1
