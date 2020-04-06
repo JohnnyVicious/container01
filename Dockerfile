@@ -5,7 +5,7 @@ RUN apt-get update \
 
 WORKDIR /home/
 
-COPY startup.ps1 /home/
-RUN chmod +x startup.ps1
+COPY startup /home/
+RUN chmod +x startup
 
-CMD [ "sh", "-c", "pwsh startup.ps1" ]
+CMD [ "sh", "-c", "sh startup" ]
