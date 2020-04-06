@@ -6,3 +6,6 @@ git clone https://github.com/JohnnyVicious/container01.git
 echo "Starting PS"
 cd container01
 pwsh startup.ps1
+cd ..
+cd TradeBot
+pwsh main.ps1
