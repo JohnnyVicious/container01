@@ -1,4 +1,4 @@
 cd /home
 git clone https://github.com/JohnnyVicious/container01.git
-ll
+cd /container01
 pwsh startup.ps1
