@@ -96,7 +96,8 @@ try {
     else { Write-Error "Github data not loaded!"; throw }
 
     # Launch MAIN program
-    pwsh .\main.ps1
+    Write-Output "Launch MAIN program in $((Get-Location).Path)"
+    pwsh main.ps1
 }
 catch {
     $seconds = Get-Random -Minimum 60 -Maximum 300
