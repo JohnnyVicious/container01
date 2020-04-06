@@ -37,10 +37,10 @@ try {
         $githubuser = $githubdata.GITHUB_USER
         $githubtoken = $githubdata.GITHUB_TOKEN
         $githuburl = $githubdata.GITHUB_REPO
-        $githubuser
-        $githubtoken
-        $githuburl
+        if((Get-Location).Path -contains 'container'){ cd.. }
         Write-Output "Path is $((Get-Location).Path)"
+        git clone "https://$githubuser:$githubtoken@$githuburl"
+        
     } else { Write-Error "Github data not loaded!"; throw }
 }
 catch {
