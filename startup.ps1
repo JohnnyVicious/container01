@@ -71,11 +71,13 @@ try {
                 git add .
                 git commit -m "$(Get-Date -Format "yyyyMMdd HH:mm")"
                 git push $githubrepo
-            } else {
+            } else {                
                 if ($demo) { 
+                    Write-Output "Checking for updates on DEV branch..."
                     git checkout dev
                     git pull $githubrepo dev
                 } else {
+                    Write-Output "Checking for updates..."
                     git checkout master
                     git pull $githubrepo master
                 }                
@@ -92,6 +94,9 @@ try {
         
     }
     else { Write-Error "Github data not loaded!"; throw }
+
+    # Launch MAIN program
+    pwsh .\main.ps1
 }
 catch {
     $seconds = Get-Random -Minimum 60 -Maximum 300
