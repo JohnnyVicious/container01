@@ -25,7 +25,7 @@ try {
             $mssqlpass = 'reader'
             if (test-connection $mssql -tcpport $mssqlport -ErrorAction SilentlyContinue) {
                 Write-Output "Connected to MSSQL, getting Github data..."                
-                $githubdata = Invoke-SqlCmd -ServerInstance "$mssql" -Username $mssqluser -Password $mssqlpass -Query "SELECT * FROM github"                
+                $githubdata = Invoke-SqlCmd -ServerInstance "$mssql" -Username $mssqluser -Password $mssqlpass -Query "SELECT * FROM github WHERE GITHUB_PROJ='TradeBot'"                
             }
             else { Write-Error "Unable to connect to $mssql on TCP $mssqlport!"; throw }
         }
