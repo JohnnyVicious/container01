@@ -4,34 +4,23 @@ try {
     }
     else { Write-Output "PowerShell version $($PSVersionTable.PSVersion) detected." }
 
-    if ($null -eq (Get-InstalledModule sqlserver -ErrorAction SilentlyContinue)) {
-        Write-Output "Installing PS module SqlServer"
-        Install-Module -Name SqlServer -Scope CurrentUser -Force    
-        Import-Module SqlServer
-        Write-Host "PowerShell SqlServer module $((get-module sqlserver).Version) is installed."
-    }
-    else {
-        Update-Module SqlServer    
-        Import-Module SqlServer
-        Write-Host "PowerShell SqlServer module $((get-module sqlserver).Version) is installed."
-    }
-
-
-    if ((get-installedmodule sqlserver).Version) {
-        if ($mssql = Get-Item Env:MSSQL -ErrorAction SilentlyContinue) {
-            $mssql = $mssql.Value
-            $mssqlport = (Get-Item Env:MSSQLPORT -ErrorAction SilentlyContinue).Value
-            $mssqluser = 'github_r'
-            $mssqlpass = 'reader'
-            if (test-connection $mssql -tcpport $mssqlport -ErrorAction SilentlyContinue) {
-                Write-Output "Connected to MSSQL, getting Github data..."                
-                $githubdata = Invoke-SqlCmd -ServerInstance "$mssql" -Username $mssqluser -Password $mssqlpass -Query "SELECT * FROM github WHERE GITHUB_PROJ='TradeBot'"                
+if ($sqler = Get-Item Env:SQLER -ErrorAction SilentlyContinue) {
+        $sqler = $sqler.Value
+        $sqlerport = (Get-Item Env:SQLERPORT -ErrorAction SilentlyContinue).Value
+        if (test-connection $sqler -tcpport $sqlerport -ErrorAction SilentlyContinue) {
+            Write-Output "Connected to SQLer, getting Github data..."                
+            #$githubdata = Invoke-SqlCmd -ServerInstance "$mssql" -Username $mssqluser -Password $mssqlpass -Query "SELECT * FROM github WHERE GITHUB_PROJ='TradeBot'"
+            $requestdata = [ordered]@{                    
+                projectname = "TradeBot"
             }
-            else { Write-Error "Unable to connect to $mssql on TCP $mssqlport!"; throw }
+            [string]$mydata = "$(ConvertTo-Json $requestdata -Compress -Verbose:$false)"
+            $result = Invoke-RestMethod -Uri "http://$($SQLER):$($SQLERPORT)/getgithubuser" -Method 'POST' -Body $mydata -ContentType "application/json"
+            $githubdata = $result.data
         }
-        else { Write-Error "MSSQL server not set as environment variable!"; throw }
+        else { Write-Error "Unable to connect to $sqler on TCP $sqlerport!"; throw }
     }
-    else { Write-Error "PS module SqlServer is not installed!"; throw }
+    else { Write-Error "SQLer server not set as environment variable!"; throw }
+
 
     # UPDATING
     if ($githubdata) {
