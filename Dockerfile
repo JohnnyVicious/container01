@@ -11,5 +11,7 @@ RUN chmod +x startup
 
 ENV MSSQL=mssql
 ENV MSSQLPORT=1433
+ENV SQLER=sqler
+ENV SQLERPORT=8025
 
 CMD [ "sh", "-c", "sh startup" ]
