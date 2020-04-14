@@ -96,9 +96,9 @@ try {
     else { Write-Error "Github data not loaded!"; throw }
 
     # Launch MAIN program
-    Write-Output "Launch MAIN program in $((Get-Location).Path)"
+    Write-Output "Checking for MAIN program in $((Get-Location).Path)"
     if((Get-ChildItem -File).Name -contains 'main.ps1'){
-        #pwsh main.ps1
+        Write-Output "Main.ps1 found in $((Get-Location).Path)."
     } else {
         Write-Error "No main.ps1 found in $((Get-Location).Path)!"; throw
     }
