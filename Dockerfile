@@ -13,5 +13,7 @@ ENV MSSQL=mssql
 ENV MSSQLPORT=1433
 ENV SQLER=sqler
 ENV SQLERPORT=8025
+ENV DEMO=0
+ENV BOTID=0
 
 CMD [ "sh", "-c", "sh startup" ]
